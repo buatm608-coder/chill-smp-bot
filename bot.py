@@ -120,8 +120,8 @@ async def leaderboard(ctx):
     sorted_data = sorted(data.items(), key=lambda x: x[1], reverse=True)[:10]
     embed = discord.Embed(title="🏆 Leaderboard", color=discord.Color.gold())
     for i, (user_id, xp) in enumerate(sorted_data, 1):
-        user = await bot.fetch_user(int(user_id))
-        embed.add_field(name=f"{i}. {user.name}", value=f"Level {get_level(xp)} | {xp} XP", inline=False)
+        member = ctx.guild.get_member(int(user_id))
+        nama = member.name if member else f"User {user_id}"
+        embed.add_field(name=f"{i}. {nama}", value=f"Level {get_level(xp)} | {xp} XP", inline=False)
     await ctx.send(embed=embed)
-
 bot.run(TOKEN)
