@@ -6,7 +6,7 @@ import asyncio
 
 TOKEN = os.environ.get("TOKEN")
 SERVER_IP = "bedrock-2.mcserver.my.id:59516"
-CHANNEL_ID = 1513845505807876107
+CHANNEL_ID = 1515298297806458921
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -16,12 +16,15 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def update_channel():
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL_ID)
+    print(f"Channel: {channel}")
     while not bot.is_closed():
         try:
             server = BedrockServer.lookup(SERVER_IP)
             status = server.status()
+            print(f"Players: {status.players.online}/{status.players.max}")
             await channel.edit(name=f"🟢 Player: {status.players.online}/{status.players.max}")
-        except:
+        except Exception as e:
+            print(f"Error: {e}")
             await channel.edit(name=f"🔴 Server Offline")
         await asyncio.sleep(60)
 
