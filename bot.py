@@ -69,4 +69,59 @@ async def report(ctx, member: discord.Member, *, alasan: str):
     await channel.send(embed=embed)
     await ctx.send(f"✅ Report kamu udah dikirim ke admin!")
 
+import json
+
+XP_FILE = "xp.json"
+
+def load_xp():
+    try:
+        with open(XP_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return {}
+
+def save_xp(data):
+    with open(XP_FILE, "w") as f:
+        json.dump(data, f)
+
+def get_level(xp):
+    return int(xp ** 0.5) // 5
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    data = load_xp()
+    user_id = str(message.author.id)
+    if user_id not in data:
+        data[user_id] = 0
+    old_level = get_level(data[user_id])
+    data[user_id] += 10
+    new_level = get_level(data[user_id])
+    save_xp(data)
+    if new_level > old_level:
+        await message.channel.send(f"🎉 {message.author.mention} naik ke **Level {new_level}**!")
+    await bot.process_commands(message)
+
+@bot.command()
+async def rank(ctx):
+    data = load_xp()
+    user_id = str(ctx.author.id)
+    xp = data.get(user_id, 0)
+    level = get_level(xp)
+    embed = discord.Embed(title=f"⭐ Rank {ctx.author.name}", color=discord.Color.gold())
+    embed.add_field(name="Level", value=str(level), inline=True)
+    embed.add_field(name="XP", value=str(xp), inline=True)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def leaderboard(ctx):
+    data = load_xp()
+    sorted_data = sorted(data.items(), key=lambda x: x[1], reverse=True)[:10]
+    embed = discord.Embed(title="🏆 Leaderboard", color=discord.Color.gold())
+    for i, (user_id, xp) in enumerate(sorted_data, 1):
+        user = await bot.fetch_user(int(user_id))
+        embed.add_field(name=f"{i}. {user.name}", value=f"Level {get_level(xp)} | {xp} XP", inline=False)
+    await ctx.send(embed=embed)
+
 bot.run(TOKEN)
