@@ -4,7 +4,7 @@ from mcstatus import BedrockServer
 import os
 
 TOKEN = os.environ.get("TOKEN")
-SERVER_IP = "https://bedrock-2.mcserver.my.id:59516"
+SERVER_IP = "bedrock-2.mcserver.my.id:59516"
 
 intents = discord.Intents.default()
 intents.message_content = True
