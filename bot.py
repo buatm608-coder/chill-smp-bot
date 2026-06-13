@@ -26,7 +26,7 @@ async def update_channel():
         except Exception as e:
             print(f"Error: {e}")
             await channel.edit(name=f"🔴 Server Offline")
-        await asyncio.sleep(60)
+        await asyncio.sleep(300)
 
 @bot.event
 async def on_ready():
