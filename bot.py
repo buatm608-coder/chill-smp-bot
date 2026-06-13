@@ -53,5 +53,20 @@ async def mcstatus(ctx):
         )
         embed.add_field(name="Status", value="🔴 Server Offline", inline=False)
         await ctx.send(embed=embed)
+REPORT_CHANNEL_ID = 1515309188127916162
+
+@bot.command()
+async def report(ctx, member: discord.Member, *, alasan: str):
+    channel = bot.get_channel(REPORT_CHANNEL_ID)
+    embed = discord.Embed(
+        title="🚨 Report Baru!",
+        color=discord.Color.red()
+    )
+    embed.add_field(name="Reporter", value=ctx.author.mention, inline=False)
+    embed.add_field(name="Dilaporkan", value=member.mention, inline=False)
+    embed.add_field(name="Alasan", value=alasan, inline=False)
+    embed.set_footer(text=f"Report dari #{ctx.channel.name}")
+    await channel.send(embed=embed)
+    await ctx.send(f"✅ Report kamu udah dikirim ke admin!")
 
 bot.run(TOKEN)
