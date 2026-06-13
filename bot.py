@@ -3,7 +3,7 @@ from discord.ext import commands
 from mcstatus import BedrockServer
 import os
 
-TOKEN = os.enirion.get("TOKEN")
+TOKEN = os.envirion.get("TOKEN")
 SERVER_IP = "https://bedrock-2.mcserver.my.id"
 
 intents = discord.Intents.default()
